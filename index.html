@@ -26,7 +26,7 @@
 		
 		header {
 			height: 73px;
-			background-color: aqua;
+			background:#69B469;
 			display: -webkit-flex;
 			display: -moz-flex;
 			display: -ms-flex;
@@ -35,6 +35,8 @@
 			flow-flex: row wrap;
 			justify-content: space-between;
 			align-items: center;
+			-webkit-box-shadow: 0 0 12px 3px #b3b3b3;
+			box-shadow: 0 0 12px 3px #b3b3b3;
 		}
 		
 		#Logo {
@@ -85,18 +87,19 @@
 		
 		#menu {
 			position: fixed;
+			border-radius: 0 6px 6px 0px;
 			top: 0;
 			left: -70%;
-			background-color: red;
+			background: #272727;
 			width: 70%;
 			height: 100%;
-			overflow: hidden;`
+			overflow: hidden;
 			-webkit-transition: left .2s ease, transform .2s ease;
 			-o-transition: left .2s ease, transform .2s ease;
 			transition: left .2s ease, transform .2s ease;
 		}
 		
-		#menu ul {
+		#menu > ul {
 			margin-top: 20%;
 		}
 		
@@ -107,13 +110,33 @@
 			white-space: nowrap;
 		}
 		
+		#menu a {
+			color: #fff;
+		}
+		
+		#menu ul ul {
+			background: #1C1C1C;
+			max-height: 0;
+			overflow: hidden;
+			-webkit-transition: max-height .5s ease;
+			-o-transition: max-height .5s ease;
+			transition: max-height .5s ease;
+		}
+		
 		#cerrar {
 			float: right;
 		}
 		
-		#cerrar .fa-window-close {
+		#cerrar .fa-arrow-left {
 			font-size: 1.8em;
-			margin: 0.35em;
+			margin: 0.4em 0.6em 0.35em 0.35em;
+			color: #fff;
+		}
+		
+		footer {
+			background: rgba(0,0,0,0.85);
+			height: 10vh;
+			width: 100%;
 		}
 		
 	</style>
@@ -129,16 +152,31 @@
 			<span id="cambio"><i class="fas fa-search" onClick="buscar()"></i><i class="fas fa-history" style="display: none;"></i></span>
 	</header>
 	  <div id="menu">
-		  <span id="cerrar"><i class="far fa-window-close" onClick="cerrar()"></i></span>
+		  <span id="cerrar"><i class="fas fa-arrow-left" onClick="cerrar()"></i></span>
 			<ul>
-				<li><a href="#">Productos</a></li>
-				<li><a href="#">Contáctenos</a></li>
-				<li><a href="#">Acerca de</a></li>
+				<li><a href="#">Productos</a>
+					<ul>
+						<li><a href="#">Producto 1</a></li>
+						<li><a href="#">Producto 2</a></li>
+						<li><a href="#">Producto 3</a></li>
+						<li><a href="#">Producto 4</a></li>
+					</ul>
+				</li>
+				<li><a href="#">Contáctenos</a>
+					<ul>
+		  				<li><a href="#">Contacto &amp; Ubicación</a></li>
+		  			</ul>
+				</li>
+				<li><a href="#">Acerca de</a>
+					<ul>
+						<li><a href="#">Información</a></li>	  
+	  				</ul>
+				</li>
 			</ul>
 		</div>
 	<section style="height: 900px;">
 	</section>
-	<footer style="background-color: black; height: 10vh; width: 100%;">
+	<footer>
 	  
 	</footer>
     <script src="node_modules/jquery/dist/jquery.js"></script>
@@ -147,6 +185,27 @@
     <script src="js/app.js"></script>
 	<script type="text/javascript">
 			
+		//header estilos.
+		
+			var logo = $('#Logo a');
+			var input = $('#Logo form');
+			var searchicon = document.getElementById('cambio').children;
+			function buscar() {
+				input.removeAttribute("style");
+				searchicon[1].removeAttribute("style");
+				logo.style.display = "none";
+				searchicon[0].style.display = "none";
+			}
+		
+			function exitSearch() {
+				logo.removeAttribute("style");
+				searchicon[0].removeAttribute("style");
+				input.style.display = "none";
+				searchicon[1].style.display = "none";
+			}
+		
+		//Menu TODO estilos y manipulacion de listas
+		
 			var menu = document.getElementById('menu');
 			function mostrar() {
 				menu.style.left = "0";
@@ -156,27 +215,23 @@
 				menu.style.left = "-70%";
 			}
 		
-			var menuEL = $('#menu > ul > li > a');
-			menuEL.addEventListener('click', cerrar);
-			
-			var logo = $('#Logo a');
-			var input = $('#Logo form');
-			var searchicon = $A('#cambio i');
-			var searchicon2 = document.getElementById('cambio').getElementsByTagName('i');
-			function buscar() {
-				input.removeAttribute("style");
-				//searchicon[1].removeAttribute("style");
-				logo.style.display = "none";
-				//searchicon[0].style.display = "none";
-				console.log(searchicon + "\n" +searchicon2);
+		//itera entre las lsitas para desplegarlas
+			const aButton = $A('#menu > ul > li > a');
+			const listasDesplegable = $A('#menu > ul li > ul');
+			for(let i = 0; i < aButton.length; i++){
+			   aButton[i].addEventListener("touchstart", function() {
+				var desplegar = function (height) {
+				   listasDesplegable[i].style.maxHeight = height;
+				 }
+					if (listasDesplegable[i].style.maxHeight <= "10px") {
+					  desplegar("200px");
+					} else {
+					  desplegar("0px");
+					}
+			  });
 			}
 		
-			function exitSearch() {
-				logo.removeAttribute("style");
-				//searchicon[0].removeAttribute("style");
-				input.style.display = "none";
-				//searchicon[1].style.display = "none";
-			}
+		//Callbacks para buscar objetos del DOM tipo nodeList.
 			
 			function $(selector) {
 			  return document.querySelector(selector);
